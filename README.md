@@ -21,54 +21,9 @@
 
 # Video Replica Studio / 视频复刻工作室
 
-参考视频复刻、拆解、对齐质检和动效组件沉淀。不是“凭感觉复刻”，而是先抽帧、写时间线，再用候选视频做对照验证；如果目标是 HyperFrames / Remotion 重制，会通过多轮对比和返修改代码，把参考视频里的动效拆成可复用组件。
+参考视频复刻、拆解、对齐质检和动效组件沉淀。
 
-## 示例成片：Presenton 复刻 Bitexact 成片
-
-[▶ Watch Presenton Replica Bitexact Showcase](https://github.com/user-attachments/assets/f792bd12-d8b3-43b7-b751-98aeb033713b)
-
-- 类型：参考视频复刻结果
-- 级别：bit-exact / pixel-aligned 交付成片
-- 时长：35.136 秒
-- 规格：1920x1080，30fps，H.264 + AAC
-- 文件：`assets/showcases/presenton-replica-pixel-aligned-bitexact.mp4`
-
-0.5 秒对照抽帧：
-
-![0.5 秒对照图](assets/images/video-replica-studio-compare.jpg)
-
-> 将实际 0.5 秒对照 contact sheet 存为 `assets/images/video-replica-studio-compare.jpg` 后，上面的占位图会生效。
-
-## 这个 Skill 能做什么
-
-- 参考视频复刻
-- HyperFrames / Remotion 动效重制
-- 可复用视频动效组件沉淀
-- 像素级 / 视觉级 / 风格级对齐判断
-- HyperFrames / Remotion 重制视频的质检
-- “当前仍然没有对齐”这类返修定位
-- 自动生成抽帧、时间线、运动剖面、diff 报告和组件脚手架
-
-## 核心方法
-
-这是一个质检和拆解 skill，本身不固定某种视觉风格。它关注证据：
-
-- 每 `0.5s` 抽帧，失败窗口用 `0.1s` 或指定时间点密采样
-- 秒级行为时间线与运动剖面（activity / static segment / hard cut / mutation）
-- side-by-side contact sheet 与 render diff 热图
-- 局部 crop / overlay / 组件级对齐证据
-- 自动差异分类：`hard_cut`、`static_segment`、`scene_boundary_mismatch`、`timing_offset`、`missing_secondary_motion`
-- 返修日志和相邻时间点回测
-- PSNR / SSIM / SHA-256 等硬指标
-- 第一个失败时间点和修复清单
-
-每个可复用组件都应该记录：
-
-- 组件描述和适用场景
-- 输入参数和内容槽位
-- 时间线、缓动、状态变化
-- 技术栈：HyperFrames / Remotion / React / CSS / SVG / GSAP
-- 对齐证据和已知限制
+不是“凭感觉复刻”，而是先抽帧、写时间线，再用候选视频做对照验证；如果目标是 HyperFrames / Remotion 重制，会通过多轮对比和返修改代码，把参考视频里的动效拆成可复用组件。
 
 ## 快速开始
 
@@ -90,19 +45,42 @@ python3 cli/replica.py scaffold hyperframes --out my-hyperframes/
 依赖：`Python 3.11+`、`Pillow`、`ffmpeg/ffprobe`（优先自动发现 `static_ffmpeg` / `imageio-ffmpeg` 或系统 PATH）。
 Remotion 脚手架需要 `Node.js 18+`。
 
-## fidelity 级别
+## 能做什么
+
+- 参考视频复刻
+- HyperFrames / Remotion 动效重制
+- 可复用视频动效组件沉淀
+- 像素级 / 视觉级 / 风格级对齐判断
+- HyperFrames / Remotion 重制视频的质检
+- “当前仍然没有对齐”这类返修定位
+
+## 核心方法
+
+这是一个质检和拆解 skill，本身不固定某种视觉风格。它关注证据：
+
+- 每 `0.5s` 抽帧，失败窗口用 `0.1s` 或指定时间点密采样
+- 秒级行为时间线与运动剖面（activity / static segment / hard cut / mutation）
+- side-by-side contact sheet 与 render diff 热图
+- 局部 crop / overlay / 组件级对齐证据
+- 自动差异分类：`hard_cut`、`static_segment`、`scene_boundary_mismatch`、`timing_offset`、`missing_secondary_motion`
+- 返修日志和相邻时间点回测
+- PSNR / SSIM / SHA-256 等硬指标
+
+每个可复用组件都应该记录：组件描述、适用场景、输入参数、时间线/缓动、技术栈、对齐证据、已知限制。
+
+## Fidelity 级别
 
 | 级别 | 适用场景 | 验收证据 |
 | --- | --- | --- |
-| Pixel-level | 用户明确要求 pixel-perfect / bit-exact | 文件 SHA-256 一致、PSNR `average:inf`、SSIM `All:1.000000` |
-| Visual-level | 常说的“复刻”“做一个一样的”“对齐这个视频” | 0.5s 抽帧 side-by-side、时间线报告、差异清单、分类报告 |
-| Style-level | “这种风格”“参考这个感觉” | 提取配色、字体行为、运动语法、节奏、转场词汇 |
+| **Pixel-level** | 用户明确要求 pixel-perfect / bit-exact | SHA-256 一致、PSNR `average:inf`、SSIM `All:1.000000` |
+| **Visual-level** | “复刻”“做一个一样的”“对齐这个视频” | 0.5s 抽帧 side-by-side、时间线报告、差异清单、分类报告 |
+| **Style-level** | “这种风格”“参考这个感觉” | 配色、字体行为、运动语法、节奏、转场词汇 |
 
-手写 HyperFrames / Remotion 通常只能达到 Visual-level，Pixel-level 需要源流复用或完全一致的视频流。
+手写 HyperFrames / Remotion 通常只能达到 Visual-level；Pixel-level 需要源流复用或完全一致的视频流。
 
 ## 反 PPT 检查清单
 
-参考视频真正“有视频感”的共性。把这些当作设计要求，而不是可选润色：
+参考视频真正“有视频感”的共性，把这些当作设计要求：
 
 1. **连续镜头 / 转场** —— 整段画面不要静止，用 push、morph、camera rig 替代硬切。
 2. **二级动效** —— 每个主体入场都伴随 glow、sheen、颗粒、光标或环境层。
@@ -128,17 +106,9 @@ Remotion 脚手架需要 `Node.js 18+`。
 .
 ├── README.md
 ├── SKILL.md
-├── agents/
-│   └── openai.yaml
-├── assets/
-│   ├── images/video-replica-studio-compare.jpg
-│   └── showcases/presenton-replica-pixel-aligned-bitexact.mp4
-├── cli/
-│   └── replica.py
-├── references/
-│   ├── alignment-workflow.md
-│   ├── presenton-lessons.md
-│   └── replica-levels.md
+├── LICENSE
+├── agents/openai.yaml
+├── cli/replica.py
 ├── scripts/
 │   ├── extract_frames.py
 │   ├── compare_videos.py
@@ -147,16 +117,22 @@ Remotion 脚手架需要 `Node.js 18+`。
 │   ├── component_crop.py
 │   ├── _utils.py
 │   └── README-scripts.md
-└── templates/
-    ├── remotion/
-    │   ├── components/
-    │   ├── shared/
-    │   └── example/
-    └── hyperframes/
-        ├── components/
-        ├── blocks/
-        ├── motion-grammar.md
-        └── example/
+├── references/
+│   ├── alignment-workflow.md
+│   ├── presenton-lessons.md
+│   └── replica-levels.md
+├── templates/
+│   ├── remotion/
+│   │   ├── components/
+│   │   ├── shared/
+│   │   └── example/
+│   └── hyperframes/
+│       ├── components/
+│       ├── blocks/
+│       ├── motion-grammar.md
+│       └── example/
+└── assets/
+    └── showcases/
 ```
 
 ## 安装
