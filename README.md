@@ -21,9 +21,9 @@
 
 # Video Replica Studio / 视频复刻工作室
 
-参考视频复刻、拆解、对齐质检和动效组件沉淀。
+参考视频复刻、拆解、对齐质检和动效组件沉淀，支持多模态视觉理解驱动创作。
 
-不是“凭感觉复刻”，而是先抽帧、写时间线，再用候选视频做对照验证；如果目标是 HyperFrames / Remotion 重制，会通过多轮对比和返修改代码，把参考视频里的动效拆成可复用组件。
+不是“凭感觉复刻”，而是先抽帧、用多模态能力**看懂**参考视频的视觉意图，再写时间线、用候选视频做对照验证；如果目标是 HyperFrames / Remotion 重制，会通过多轮对比和返修改代码，把参考视频里的动效拆成可复用组件。对于风格级任务，会提取 Style DNA 并在新内容上重新表达。
 
 ## 快速开始
 
@@ -47,17 +47,23 @@ Remotion 脚手架需要 `Node.js 18+`。
 
 ## 能做什么
 
-- 参考视频复刻
+- 参考视频复刻（像素级 / 视觉级 / 风格级）
+- **多模态视觉意图提取** —— 用多模态能力看懂参考帧的视觉叙事、动效意图和情绪
 - HyperFrames / Remotion 动效重制
+- **早期组件识别** —— 在动手前将参考动效映射到已有组件库
+- **Style DNA 提取与重表达** —— 提取风格基因并在新内容上变体应用
 - 可复用视频动效组件沉淀
-- 像素级 / 视觉级 / 风格级对齐判断
+- **运动词汇卡片组** —— 每种动效模式的使用场景、组合配方和决策树
 - HyperFrames / Remotion 重制视频的质检
 - “当前仍然没有对齐”这类返修定位
 
 ## 核心方法
 
-这是一个质检和拆解 skill，本身不固定某种视觉风格。它关注证据：
+这是一个质检和拆解 skill，本身不固定某种视觉风格。它关注证据，也关注视觉理解：
 
+- **多模态视觉检查** —— 在每个决策点主动查看 contact sheet、render-diff 热图和 side-by-side 帧对比
+- **视觉意图提取** —— 描述每段动效的 what/why/mood，而不只是技术指标
+- **早期组件识别** —— 在动手前将参考片段匹配到 CameraRig、KineticText 等现有组件
 - 每 `0.5s` 抽帧，失败窗口用 `0.1s` 或指定时间点密采样
 - 秒级行为时间线与运动剖面（activity / static segment / hard cut / mutation）
 - side-by-side contact sheet 与 render diff 热图
@@ -65,8 +71,9 @@ Remotion 脚手架需要 `Node.js 18+`。
 - 自动差异分类：`hard_cut`、`static_segment`、`scene_boundary_mismatch`、`timing_offset`、`missing_secondary_motion`
 - 返修日志和相邻时间点回测
 - PSNR / SSIM / SHA-256 等硬指标
+- **Style DNA** —— 提取配色比例、缓动偏好、转场词汇、空间密度，编码为 `Palette` / `EasingType` / `TransitionType` 参数
 
-每个可复用组件都应该记录：组件描述、适用场景、输入参数、时间线/缓动、技术栈、对齐证据、已知限制。
+每个可复用组件都应该记录：组件描述、适用场景、输入参数、时间线/缓动、技术栈、对齐证据、已知限制、组合配方。
 
 ## Fidelity 级别
 
@@ -74,7 +81,7 @@ Remotion 脚手架需要 `Node.js 18+`。
 | --- | --- | --- |
 | **Pixel-level** | 用户明确要求 pixel-perfect / bit-exact | SHA-256 一致、PSNR `average:inf`、SSIM `All:1.000000` |
 | **Visual-level** | “复刻”“做一个一样的”“对齐这个视频” | 0.5s 抽帧 side-by-side、时间线报告、差异清单、分类报告 |
-| **Style-level** | “这种风格”“参考这个感觉” | 配色、字体行为、运动语法、节奏、转场词汇 |
+| **Style-level** | “这种风格”“参考这个感觉” | Style DNA：配色比例、字体性格、运动节奏、缓动偏好、转场词汇、空间密度，编码为可参数化 token |
 
 手写 HyperFrames / Remotion 通常只能达到 Visual-level；Pixel-level 需要源流复用或完全一致的视频流。
 
@@ -87,6 +94,8 @@ Remotion 脚手架需要 `Node.js 18+`。
 3. **纹理层** —— film grain、vignette、ambient glow 以低透明度覆盖在最上层。
 4. **丰富缓动** —— 避免线性淡入淡出和默认 ease-in-out，使用 `power3.inOut`、`back.out`、`elastic.out` 或自定义 spring。
 5. **场景重叠生命周期** —— 下一场景应在前一场景结束前开始进入，不要先黑屏再切换。
+
+每种动效模式的详细决策树、组合配方和组件映射见 `references/motion-vocabulary.md`。
 
 ## CLI 速查
 
@@ -119,8 +128,11 @@ Remotion 脚手架需要 `Node.js 18+`。
 │   └── README-scripts.md
 ├── references/
 │   ├── alignment-workflow.md
+│   ├── motion-vocabulary.md
 │   ├── presenton-lessons.md
-│   └── replica-levels.md
+│   ├── replica-levels.md
+│   ├── style-dna.md
+│   └── visual-intent-guide.md
 ├── templates/
 │   ├── remotion/
 │   │   ├── components/
@@ -145,4 +157,5 @@ npx skills add https://github.com/taotao135791-bit/video-replica-studio
 
 - 不凭感觉宣称像素级对齐；像素级需要一致哈希、PSNR infinity 或 SSIM 1.0 等硬证据。
 - 手写 HyperFrames / Remotion 复刻通常目标是视觉级对齐和组件沉淀。
-- 不是风格化原创 skill，也不是片头生成 skill；它专注于参考视频的拆解、复刻和质检。
+- 风格级任务通过 Style DNA 提取与重表达实现变体创作，不是凭感觉模仿。
+- 不是片头生成 skill；它专注于参考视频的拆解、复刻、风格提取和质检。

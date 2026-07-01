@@ -2,3 +2,82 @@ interface:
   display_name: "视频复刻工作室"
   short_description: "参考视频拆解动效复刻 HyperFrames/Remotion 组件沉淀对齐差分和硬质检"
   default_prompt: "Use $video-replica-studio to analyze this reference video, recreate the motion as HyperFrames/Remotion components when needed, and verify alignment with evidence."
+
+capabilities:
+  multimodal: true
+  visual_inspection: true
+  description: >
+    This skill benefits from multimodal input. The agent should actively look at
+    contact sheets, render-diff heatmaps, and side-by-side frame comparisons at
+    every decision point. Visual understanding is a first-class signal alongside
+    PSNR/SSIM metrics.
+
+preferred_tools:
+  analysis:
+    - "cli/replica.py analyze"
+    - "cli/replica.py diff"
+    - "cli/replica.py quick"
+  scaffolding:
+    - "cli/replica.py scaffold remotion"
+    - "cli/replica.py scaffold hyperframes"
+  validation:
+    - "hyperframes lint"
+    - "hyperframes validate"
+    - "hyperframes inspect"
+    - "npm run typecheck (Remotion)"
+
+creative_modes:
+  pixel_level:
+    freedom: "none"
+    description: "Exact reproduction only. No creative deviation. Hard metrics required."
+  visual_level:
+    freedom: "low"
+    description: "Match the reference visually. Minor easing/timing variations accepted if documented."
+  style_level:
+    freedom: "high"
+    description: >
+      Extract Style DNA (palette, rhythm, easing, transitions, spatial density)
+      and re-express on new content. Use references/style-dna.md for the method.
+      Variation strategies: rhythm acceleration/deceleration, temperature shift,
+      spatial density scaling, motion density scaling.
+
+visual_inspection_hooks:
+  - step: "2_analyze"
+    action: "Read contact sheet images. Describe rhythm, color, motion types, narrative arc."
+  - step: "3_visual_intent"
+    action: "Map motion profile peaks to visual intent. Output visual-intent.md."
+  - step: "5_compare"
+    action: "Look at render-diff heatmaps. Prioritize focal-area mismatches over peripheral."
+  - step: "6_patch"
+    action: "View reference vs candidate side-by-side. Describe differences in natural language before coding."
+
+component_library:
+  remotion:
+    location: "templates/remotion/components/"
+    components:
+      - CameraRig
+      - GlowSurface
+      - GlowCard3D
+      - KineticText
+      - TypewriterText
+      - Cursor
+      - GrainOverlay
+      - Vignette
+      - AmbientGlow
+      - SceneTransition
+  hyperframes:
+    components_location: "templates/hyperframes/components/"
+    blocks_location: "templates/hyperframes/blocks/"
+    motion_grammar: "templates/hyperframes/motion-grammar.md"
+
+reference_documents:
+  - "references/replica-levels.md"
+  - "references/alignment-workflow.md"
+  - "references/visual-intent-guide.md"
+  - "references/motion-vocabulary.md"
+  - "references/style-dna.md"
+  - "references/presenton-lessons.md"
+interface:
+  display_name: "视频复刻工作室"
+  short_description: "参考视频拆解动效复刻 HyperFrames/Remotion 组件沉淀对齐差分和硬质检"
+  default_prompt: "Use $video-replica-studio to analyze this reference video, recreate the motion as HyperFrames/Remotion components when needed, and verify alignment with evidence."
