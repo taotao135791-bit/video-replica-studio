@@ -1,0 +1,54 @@
+<!--
+  Ambient Glow — paste-in component
+  Place the .ambient-glow element BEHIND the hero element (lower z-index).
+
+  1. Paste the HTML where the glow should live.
+  2. Paste the CSS into your <style> block.
+  3. Paste the JS into your main timeline script (after window.__timelines["<id>"] = tl).
+
+  Props (set via CSS variables on the host root or inline style):
+    --glow-color       : halo tint, darker/more saturated than hero (default #3b82f6)
+    --glow-peak        : max opacity, keep <= 0.45 (default 0.28)
+    --glow-inset       : negative inset so halo extends past hero (default -120px)
+    --glow-start-scale : initial scale of the halo (default 0.85)
+    --glow-start       : when the bloom begins, seconds (default 0.3)
+    --glow-duration    : bloom-in duration, seconds (default 0.9)
+-->
+
+<!-- HTML -->
+<div class="ambient-glow" id="ambient-glow"></div>
+
+<!-- CSS -->
+<style>
+  .ambient-glow {
+    position: absolute;
+    z-index: 1;
+    inset: var(--glow-inset, -120px);
+    background: radial-gradient(
+      circle at 50% 50%,
+      var(--glow-color, #3b82f6) 0%,
+      rgba(0, 0, 0, 0) 70%
+    );
+    opacity: 0;
+    transform: scale(var(--glow-start-scale, 0.85));
+    transform-origin: 50% 50%;
+    pointer-events: none;
+    will-change: transform, opacity;
+  }
+</style>
+
+<!-- JS — paste into your main timeline script -->
+<script>
+  // const glow = document.getElementById("ambient-glow");
+  // const hostRoot = glow.closest("[data-composition-id]");
+  // const styles = getComputedStyle(hostRoot);
+  // const peak = parseFloat(styles.getPropertyValue("--glow-peak")) || 0.28;
+  // const startScale = parseFloat(styles.getPropertyValue("--glow-start-scale")) || 0.85;
+  // const start = parseFloat(styles.getPropertyValue("--glow-start")) || 0.3;
+  // const duration = parseFloat(styles.getPropertyValue("--glow-duration")) || 0.9;
+  // tl.fromTo(glow,
+  //   { opacity: 0, scale: startScale },
+  //   { opacity: peak, scale: 1, duration, ease: "power2.out" },
+  //   start
+  // );
+</script>

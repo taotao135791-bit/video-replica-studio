@@ -1,0 +1,74 @@
+<!--
+  Typewriter Text — paste-in component
+  Smooth character reveal with a deterministic block cursor.
+
+  1. Paste the HTML.
+  2. Paste the CSS.
+  3. Paste the JS into your main timeline script.
+
+  Props (set via CSS variables or by editing the constants):
+    --type-font-size  : text font size (default 72px)
+    --type-color      : text color (default #f3f4f6)
+    --type-cursor     : cursor color (default #22d3ee)
+    --type-cursor-w   : cursor width, px (default 14)
+    --type-cursor-h   : cursor height, px (default 64)
+    --type-start      : typing start time, seconds (default 0.3)
+-->
+
+<!-- HTML -->
+<div class="typewriter">
+  <span class="typewriter__text" id="typewriter-text"></span><span class="typewriter__cursor" id="typewriter-cursor"></span>
+</div>
+
+<!-- CSS -->
+<style>
+  .typewriter {
+    font-family: "JetBrains Mono", "SF Mono", Consolas, monospace;
+    font-size: var(--type-font-size, 72px);
+    font-weight: 700;
+    color: var(--type-color, #f3f4f6);
+    white-space: pre;
+  }
+  .typewriter__cursor {
+    display: inline-block;
+    width: var(--type-cursor-w, 14px);
+    height: var(--type-cursor-h, 64px);
+    margin-left: 8px;
+    background: var(--type-cursor, #22d3ee);
+    vertical-align: -8px;
+  }
+</style>
+
+<!-- JS — paste into your main timeline script -->
+<script>
+  // const FULL_TEXT = "{{your text here}}";
+  // const textEl = document.getElementById("typewriter-text");
+  // const cursorEl = document.getElementById("typewriter-cursor");
+  // const hostRoot = textEl.closest("[data-composition-id]");
+  // const styles = getComputedStyle(hostRoot);
+  // const start = parseFloat(styles.getPropertyValue("--type-start")) || 0.3;
+  // const charTime = 0.07;
+  // const typeDuration = FULL_TEXT.length * charTime;
+  // const totalDuration = parseFloat(hostRoot.dataset.duration) || 5;
+  //
+  // const driver = { len: 0 };
+  // tl.to(driver, {
+  //   len: FULL_TEXT.length,
+  //   duration: typeDuration,
+  //   ease: "power1.inOut",
+  //   onUpdate: () => {
+  //     textEl.textContent = FULL_TEXT.slice(0, Math.floor(driver.len));
+  //   },
+  // }, start);
+  //
+  // const blinkCycles = Math.max(1, Math.round(totalDuration / 0.7));
+  // const blink = { p: 0 };
+  // tl.to(blink, {
+  //   p: Math.PI * 2 * blinkCycles,
+  //   duration: totalDuration,
+  //   ease: "none",
+  //   onUpdate: () => {
+  //     cursorEl.style.opacity = Math.sin(blink.p) > 0 ? "1" : "0";
+  //   },
+  // }, 0);
+</script>

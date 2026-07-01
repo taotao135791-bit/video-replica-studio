@@ -1,0 +1,108 @@
+<!doctype html>
+<html
+  lang="en"
+  data-composition-variables='[
+    {"id":"title","type":"string","label":"Card title","default":"Motion"},
+    {"id":"subtitle","type":"string","label":"Card subtitle","default":"without the slideshow"},
+    {"id":"accent","type":"color","label":"Glow accent","default":"#3b82f6"},
+    {"id":"bg","type":"color","label":"Background","default":"#050505"},
+    {"id":"surface","type":"color","label":"Surface","default":"#111111"},
+    {"id":"text","type":"color","label":"Text color","default":"#f3f4f6"}
+  ]'
+>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=1920, height=1080" />
+    <title>Glow Card 3D</title>
+    <script src="https://cdn.jsdelivr.net/npm/gsap@3.14.2/dist/gsap.min.js"></script>
+  </head>
+  <body>
+    <template>
+      <style>
+        #root {
+          position: absolute;
+          inset: 0;
+          display: grid;
+          place-items: center;
+          background: var(--bg, #050505);
+          background-color: var(--bg, #050505);
+          color: var(--text);
+          font-family: Inter, system-ui, sans-serif;
+          overflow: hidden;
+        }
+        .stage {
+          position: relative;
+          perspective: 1200px;
+          transform-style: preserve-3d;
+        }
+        .glow {
+          position: absolute;
+          z-index: 1;
+          inset: -160px;
+          background: radial-gradient(circle at 50% 50%, var(--accent) 0%, rgba(0, 0, 0, 0) 65%);
+          opacity: 0;
+          transform: scale(0.8);
+          pointer-events: none;
+        }
+        .card {
+          position: relative;
+          z-index: 2;
+          width: 760px;
+          padding: 64px;
+          background: var(--surface);
+          border: 1px solid rgba(255, 255, 255, 0.08);
+          border-radius: 32px;
+          transform-origin: 50% 50%;
+        }
+        .card h1 {
+          margin: 0 0 16px;
+          font-size: 96px;
+          font-weight: 900;
+          line-height: 1;
+        }
+        .card p {
+          margin: 0;
+          font-size: 36px;
+          color: rgba(255, 255, 255, 0.65);
+        }
+      </style>
+
+      <div id="root" data-composition-id="glow-card-3d" data-width="1920" data-height="1080">
+        <div class="stage">
+          <div class="glow" id="card-glow"></div>
+          <div class="card" id="card">
+            <h1 id="card-title"></h1>
+            <p id="card-subtitle"></p>
+          </div>
+        </div>
+      </div>
+
+      <script>
+        const { title, subtitle, accent, bg, surface, text } = window.__hyperframes.getVariables();
+        const root = document.getElementById("root");
+        root.style.setProperty("--bg", bg);
+        root.style.setProperty("--surface", surface);
+        root.style.setProperty("--text", text);
+        root.style.setProperty("--accent", accent);
+        document.getElementById("card-title").textContent = title;
+        document.getElementById("card-subtitle").textContent = subtitle;
+
+        window.__timelines = window.__timelines || {};
+        const tl = gsap.timeline({ paused: true });
+
+        tl.fromTo("#card-glow",
+          { opacity: 0, scale: 0.8 },
+          { opacity: 0.3, scale: 1, duration: 0.9, ease: "power2.out" },
+          0.2
+        );
+        tl.fromTo("#card",
+          { rotateX: 14, rotateY: -16, scale: 0.9, opacity: 0 },
+          { rotateX: 0, rotateY: 0, scale: 1, opacity: 1, duration: 1.0, ease: "power3.out" },
+          0.2
+        );
+
+        window.__timelines["glow-card-3d"] = tl;
+      </script>
+    </template>
+  </body>
+</html>

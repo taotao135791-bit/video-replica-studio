@@ -1,0 +1,61 @@
+<!--
+  Kinetic Text — paste-in component
+  Staggered phrase entrances with transform-only motion.
+
+  1. Paste the HTML.
+  2. Paste the CSS.
+  3. Paste the JS into your main timeline script.
+
+  Props (set via CSS variables or by editing the PHRASES array):
+    --kinetic-font-size : phrase font size (default 120px)
+    --kinetic-color     : phrase color (default #f3f4f6)
+    --kinetic-stagger   : delay between phrases, seconds (default 0.18)
+    --kinetic-start     : first phrase start time, seconds (default 0.2)
+    --kinetic-duration  : per-phrase entrance duration, seconds (default 0.55)
+-->
+
+<!-- HTML -->
+<div class="kinetic-text" id="kinetic-text"></div>
+
+<!-- CSS -->
+<style>
+  .kinetic-text {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 0.35em;
+    font-size: var(--kinetic-font-size, 120px);
+    font-weight: 900;
+    line-height: 1.05;
+    color: var(--kinetic-color, #f3f4f6);
+    perspective: 1000px;
+  }
+  .kinetic-text__phrase {
+    display: inline-block;
+    transform-origin: 50% 100%;
+    white-space: pre;
+  }
+</style>
+
+<!-- JS — paste into your main timeline script -->
+<script>
+  // const PHRASES = ["Ship", "faster", "with", "motion"];
+  // const container = document.getElementById("kinetic-text");
+  // const hostRoot = container.closest("[data-composition-id]");
+  // const styles = getComputedStyle(hostRoot);
+  // const stagger = parseFloat(styles.getPropertyValue("--kinetic-stagger")) || 0.18;
+  // const start = parseFloat(styles.getPropertyValue("--kinetic-start")) || 0.2;
+  // const duration = parseFloat(styles.getPropertyValue("--kinetic-duration")) || 0.55;
+  //
+  // PHRASES.forEach((text, i) => {
+  //   const el = document.createElement("span");
+  //   el.className = "kinetic-text__phrase";
+  //   el.textContent = text;
+  //   container.appendChild(el);
+  //   tl.fromTo(el,
+  //     { y: 60, opacity: 0, rotateX: -45 },
+  //     { y: 0, opacity: 1, rotateX: 0, duration, ease: "back.out(1.6)" },
+  //     start + i * stagger
+  //   );
+  // });
+</script>

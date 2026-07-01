@@ -1,0 +1,83 @@
+<!doctype html>
+<html
+  lang="en"
+  data-composition-variables='[
+    {"id":"phrases","type":"string","label":"Phrases (comma separated)","default":"Ship,faster,with,motion"},
+    {"id":"color","type":"color","label":"Text color","default":"#f3f4f6"},
+    {"id":"bg","type":"color","label":"Background","default":"#050505"},
+    {"id":"stagger","type":"number","label":"Stagger seconds","default":0.18,"min":0.05,"max":1,"step":0.05},
+    {"id":"start","type":"number","label":"Start time seconds","default":0.2,"min":0,"max":5,"step":0.1}
+  ]'
+>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=1920, height=1080" />
+    <title>Kinetic Text</title>
+    <script src="https://cdn.jsdelivr.net/npm/gsap@3.14.2/dist/gsap.min.js"></script>
+  </head>
+  <body>
+    <template>
+      <style>
+        #root {
+          position: absolute;
+          inset: 0;
+          display: grid;
+          place-items: center;
+          background: var(--bg, #050505);
+          background-color: var(--bg, #050505);
+          font-family: Inter, system-ui, sans-serif;
+          overflow: hidden;
+        }
+        .kinetic-text {
+          display: flex;
+          flex-wrap: wrap;
+          justify-content: center;
+          gap: 0.35em;
+          font-size: 120px;
+          font-weight: 900;
+          line-height: 1.05;
+          color: var(--color);
+          perspective: 1000px;
+        }
+        .phrase {
+          display: inline-block;
+          transform-origin: 50% 100%;
+          white-space: pre;
+        }
+      </style>
+
+      <div id="root" data-composition-id="kinetic-text-block" data-width="1920" data-height="1080">
+        <div class="kinetic-text" id="text-stage"></div>
+      </div>
+
+      <script>
+        const { phrases, color, bg, stagger, start } = window.__hyperframes.getVariables();
+        const root = document.getElementById("root");
+        root.style.setProperty("--bg", bg);
+        root.style.setProperty("--color", color);
+
+        const phraseList = String(phrases).split(",").map((s) => s.trim()).filter(Boolean);
+        const stage = document.getElementById("text-stage");
+        phraseList.forEach((text) => {
+          const span = document.createElement("span");
+          span.className = "phrase";
+          span.textContent = text;
+          stage.appendChild(span);
+        });
+
+        window.__timelines = window.__timelines || {};
+        const tl = gsap.timeline({ paused: true });
+
+        phraseList.forEach((_, i) => {
+          tl.fromTo(stage.children[i],
+            { y: 60, opacity: 0, rotateX: -45 },
+            { y: 0, opacity: 1, rotateX: 0, duration: 0.55, ease: "back.out(1.6)" },
+            start + i * stagger
+          );
+        });
+
+        window.__timelines["kinetic-text-block"] = tl;
+      </script>
+    </template>
+  </body>
+</html>

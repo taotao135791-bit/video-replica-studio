@@ -1,0 +1,21 @@
+<!--
+  Vignette — paste-in component
+  Props (set via CSS variables on the host root or inline style):
+    --vignette-color  : fallback / outer color (default rgba(0,0,0,0.55))
+    --vignette-start  : gradient inner stop, 0-1 (default 0.5)
+    --vignette-end    : gradient outer stop, 0-1 (default 1.0)
+-->
+<style>
+  .vignette-overlay {
+    position: absolute;
+    inset: 0;
+    z-index: 998;
+    pointer-events: none;
+    background: radial-gradient(
+      circle at 50% 50%,
+      rgba(0, 0, 0, 0) calc(var(--vignette-start, 0.5) * 100%),
+      var(--vignette-color, rgba(0, 0, 0, 0.55)) calc(var(--vignette-end, 1.0) * 100%)
+    );
+  }
+</style>
+<div class="vignette-overlay" aria-hidden="true"></div>

@@ -1,0 +1,83 @@
+<!doctype html>
+<html
+  lang="en"
+  data-composition-variables='[
+    {"id":"targetX","type":"number","label":"Target X offset px","default":0,"min":-1000,"max":1000,"step":10},
+    {"id":"targetY","type":"number","label":"Target Y offset px","default":-200,"min":-1000,"max":1000,"step":10},
+    {"id":"targetScale","type":"number","label":"Final scale","default":1.4,"min":1,"max":5,"step":0.1},
+    {"id":"moveStart","type":"number","label":"Move start seconds","default":1.0,"min":0,"max":10,"step":0.1},
+    {"id":"moveDuration","type":"number","label":"Move duration seconds","default":1.2,"min":0.1,"max":5,"step":0.1},
+    {"id":"bg","type":"color","label":"Background","default":"#050505"}
+  ]'
+>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=1920, height=1080" />
+    <title>Camera Rig</title>
+    <script src="https://cdn.jsdelivr.net/npm/gsap@3.14.2/dist/gsap.min.js"></script>
+  </head>
+  <body>
+    <template>
+      <style>
+        #root {
+          position: absolute;
+          inset: 0;
+          overflow: hidden;
+          background: var(--bg, #050505);
+          background-color: var(--bg, #050505);
+          font-family: Inter, system-ui, sans-serif;
+        }
+        .world {
+          position: absolute;
+          inset: 0;
+          display: grid;
+          place-items: center;
+          background: var(--bg, #050505);
+          transform-origin: 50% 50%;
+          will-change: transform;
+        }
+        .hero {
+          font-size: 140px;
+          font-weight: 900;
+          color: #f3f4f6;
+        }
+      </style>
+
+      <div id="root" data-composition-id="camera-rig-block" data-width="1920" data-height="1080">
+        <div class="world" id="world">
+          <div class="hero">Focus here</div>
+        </div>
+      </div>
+
+      <script>
+        const { targetX, targetY, targetScale, moveStart, moveDuration, bg } = window.__hyperframes.getVariables();
+        const root = document.getElementById("root");
+        root.style.setProperty("--bg", bg);
+
+        const world = document.getElementById("world");
+        const cam = { scale: 1, x: 0, y: 0 };
+        function applyCamera() {
+          world.style.transform = `translate(${cam.x}px, ${cam.y}px) scale(${cam.scale})`;
+        }
+        applyCamera();
+
+        const endX = -targetX * targetScale;
+        const endY = -targetY * targetScale;
+
+        window.__timelines = window.__timelines || {};
+        const tl = gsap.timeline({ paused: true });
+
+        tl.to(cam, {
+          scale: targetScale,
+          x: endX,
+          y: endY,
+          duration: moveDuration,
+          ease: "power3.inOut",
+          onUpdate: applyCamera,
+        }, moveStart);
+
+        window.__timelines["camera-rig-block"] = tl;
+      </script>
+    </template>
+  </body>
+</html>

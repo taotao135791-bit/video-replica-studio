@@ -1,0 +1,79 @@
+<!--
+  Cursor Click — paste-in component
+  An animated mouse cursor moves to a target, clicks, and emits a ripple.
+
+  1. Paste the HTML.
+  2. Paste the CSS.
+  3. Paste the JS into your main timeline script.
+
+  Props (set via CSS variables or by editing the constants):
+    --cursor-fill   : cursor SVG fill (default #ffffff)
+    --cursor-stroke : cursor SVG stroke (default rgba(0,0,0,0.5))
+    --ripple-color  : ripple ring color (default rgba(255,255,255,0.6))
+    --target-x      : click target X offset from cursor origin, px
+    --target-y      : click target Y offset from cursor origin, px
+    --move-dur      : cursor travel duration, seconds (default 0.5)
+    --click-at      : click time, seconds (default 0.6)
+-->
+
+<!-- HTML -->
+<div class="cursor" id="cursor">
+  <svg width="32" height="32" viewBox="0 0 24 24" aria-hidden="true">
+    <path d="M5 3L19 12L12 13L9 20L5 3Z" fill="var(--cursor-fill, #ffffff)" stroke="var(--cursor-stroke, rgba(0,0,0,0.5))" stroke-width="1.5" />
+  </svg>
+</div>
+<div class="ripple" id="cursor-ripple"></div>
+
+<!-- CSS -->
+<style>
+  .cursor {
+    position: absolute;
+    left: 10%;
+    top: 80%;
+    z-index: 999;
+    pointer-events: none;
+    will-change: transform;
+  }
+  .ripple {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    width: 100px;
+    height: 100px;
+    border-radius: 50%;
+    border: 2px solid var(--ripple-color, rgba(255, 255, 255, 0.6));
+    transform: translate(-50%, -50%) scale(0);
+    opacity: 0;
+    pointer-events: none;
+    z-index: 998;
+    will-change: transform, opacity;
+  }
+</style>
+
+<!-- JS — paste into your main timeline script -->
+<script>
+  // const cursor = document.getElementById("cursor");
+  // const ripple = document.getElementById("cursor-ripple");
+  // const hostRoot = cursor.closest("[data-composition-id]");
+  // const styles = getComputedStyle(hostRoot);
+  // const targetX = parseFloat(styles.getPropertyValue("--target-x")) || 600;
+  // const targetY = parseFloat(styles.getPropertyValue("--target-y")) || -500;
+  // const moveDur = parseFloat(styles.getPropertyValue("--move-dur")) || 0.5;
+  // const clickAt = parseFloat(styles.getPropertyValue("--click-at")) || 0.6;
+  // const pressDur = 0.08;
+  // const rippleDur = 0.7;
+  // const rippleScale = 5;
+  //
+  // // Move
+  // tl.to(cursor, { x: targetX, y: targetY, duration: moveDur, ease: "back.out(1.3)" }, 0);
+  // // Click depression
+  // tl.to(cursor, { scale: 0.85, duration: pressDur, yoyo: true, repeat: 1 }, clickAt);
+  // tl.to("#cta-target", { scale: 0.95, duration: pressDur, yoyo: true, repeat: 1 }, clickAt);
+  // // Ripple burst
+  // tl.set(ripple, { opacity: 1 }, clickAt);
+  // tl.fromTo(ripple,
+  //   { scale: 0, opacity: 1 },
+  //   { scale: rippleScale, opacity: 0, duration: rippleDur, ease: "power2.out" },
+  //   clickAt
+  // );
+</script>

@@ -1,0 +1,93 @@
+<!doctype html>
+<html
+  lang="en"
+  data-composition-variables='[
+    {"id":"label","type":"string","label":"Hero label","default":"Glow"},
+    {"id":"glowColor","type":"color","label":"Glow color","default":"#3b82f6"},
+    {"id":"bg","type":"color","label":"Background","default":"#050505"},
+    {"id":"surface","type":"color","label":"Surface","default":"#111111"},
+    {"id":"text","type":"color","label":"Text color","default":"#f3f4f6"},
+    {"id":"peak","type":"number","label":"Glow peak opacity","default":0.28,"min":0.05,"max":0.45,"step":0.01}
+  ]'
+>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=1920, height=1080" />
+    <title>Ambient Glow</title>
+    <script src="https://cdn.jsdelivr.net/npm/gsap@3.14.2/dist/gsap.min.js"></script>
+  </head>
+  <body>
+    <template>
+      <style>
+        #root {
+          position: absolute;
+          inset: 0;
+          display: grid;
+          place-items: center;
+          background: var(--bg, #050505);
+          background-color: var(--bg, #050505);
+          font-family: Inter, system-ui, sans-serif;
+          overflow: hidden;
+        }
+        .stage {
+          position: relative;
+          display: grid;
+          place-items: center;
+        }
+        .glow {
+          position: absolute;
+          z-index: 1;
+          inset: -180px;
+          background: radial-gradient(circle at 50% 50%, var(--glowColor) 0%, rgba(0, 0, 0, 0) 65%);
+          opacity: 0;
+          transform: scale(0.8);
+          pointer-events: none;
+          will-change: transform, opacity;
+        }
+        .hero {
+          position: relative;
+          z-index: 2;
+          padding: 64px 120px;
+          background: var(--surface);
+          border-radius: 32px;
+          font-size: 120px;
+          font-weight: 900;
+          color: var(--text);
+        }
+      </style>
+
+      <div id="root" data-composition-id="ambient-glow-block" data-width="1920" data-height="1080">
+        <div class="stage">
+          <div class="glow" id="ambient-glow"></div>
+          <div class="hero" id="ambient-hero"></div>
+        </div>
+      </div>
+
+      <script>
+        const { label, glowColor, bg, surface, text, peak } = window.__hyperframes.getVariables();
+        const root = document.getElementById("root");
+        root.style.setProperty("--bg", bg);
+        root.style.setProperty("--surface", surface);
+        root.style.setProperty("--text", text);
+        root.style.setProperty("--glowColor", glowColor);
+        document.getElementById("ambient-hero").textContent = label;
+
+        window.__timelines = window.__timelines || {};
+        const tl = gsap.timeline({ paused: true });
+
+        tl.fromTo("#ambient-glow",
+          { opacity: 0, scale: 0.8 },
+          { opacity: peak, scale: 1, duration: 0.9, ease: "power2.out" },
+          0.2
+        );
+        tl.fromTo("#ambient-hero",
+          { y: 40, opacity: 0 },
+          { y: 0, opacity: 1, duration: 0.8, ease: "power3.out" },
+          0.2
+        );
+
+        window.__timelines["ambient-glow-block"] = tl;
+      </script>
+    </template>
+  </body>
+</html>

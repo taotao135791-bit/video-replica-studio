@@ -1,0 +1,62 @@
+<!--
+  Camera Rig — paste-in component
+  Virtual camera that pans/zooms/locks by transforming a single .world wrapper.
+
+  1. Paste the HTML wrapper around your scene content.
+  2. Paste the CSS.
+  3. Paste the JS into your main timeline script.
+
+  Props (set via CSS variables or by editing the constants):
+    --cam-start      : when camera move begins, seconds (default 1.5)
+    --cam-duration   : camera move duration, seconds (default 1.2)
+    --cam-target-x   : world X offset to focus, px (default 0)
+    --cam-target-y   : world Y offset to focus, px (default -200)
+    --cam-target-s   : final scale (default 1.4)
+-->
+
+<!-- HTML -->
+<div class="world" id="world">
+  <!-- All scene content goes inside .world -->
+</div>
+
+<!-- CSS -->
+<style>
+  .world {
+    position: absolute;
+    inset: 0;
+    display: grid;
+    place-items: center;
+    transform-origin: 50% 50%;
+    will-change: transform;
+  }
+</style>
+
+<!-- JS — paste into your main timeline script -->
+<script>
+  // const world = document.getElementById("world");
+  // const hostRoot = world.closest("[data-composition-id]");
+  // const styles = getComputedStyle(hostRoot);
+  // const cam = { scale: 1, x: 0, y: 0 };
+  // function applyCamera() {
+  //   world.style.transform = `translate(${cam.x}px, ${cam.y}px) scale(${cam.scale})`;
+  // }
+  // applyCamera();
+  //
+  // const start = parseFloat(styles.getPropertyValue("--cam-start")) || 1.5;
+  // const duration = parseFloat(styles.getPropertyValue("--cam-duration")) || 1.2;
+  // const targetX = parseFloat(styles.getPropertyValue("--cam-target-x")) || 0;
+  // const targetY = parseFloat(styles.getPropertyValue("--cam-target-y")) || -200;
+  // const targetS = parseFloat(styles.getPropertyValue("--cam-target-s")) || 1.4;
+  //
+  // // Counter-translate: T = -offset * S
+  // const endX = -targetX * targetS;
+  // const endY = -targetY * targetS;
+  // tl.to(cam, {
+  //   scale: targetS,
+  //   x: endX,
+  //   y: endY,
+  //   duration,
+  //   ease: "power3.inOut",
+  //   onUpdate: applyCamera,
+  // }, start);
+</script>

@@ -1,0 +1,91 @@
+<!--
+  Glow Surface — paste-in component
+  A surface with a traveling sheen and optional 3D tilt.
+
+  1. Paste the HTML where the card should live.
+  2. Paste the CSS into your <style> block.
+  3. Paste the JS into your main timeline script.
+
+  Props (set via CSS variables on the host root or inline style):
+    --surface-bg        : card background (default #111111)
+    --surface-border    : border color (default rgba(255,255,255,0.08))
+    --surface-radius    : border radius (default 24px)
+    --sheen-color       : highlight color (default rgba(255,255,255,0.18))
+    --sheen-width       : width of the traveling band (default 35%)
+    --sheen-start       : when the sheen begins, seconds (default 1.0)
+    --sheen-duration    : sheen pass duration, seconds (default 1.2)
+    --tilt-start        : when 3D tilt begins, seconds (default 0.2)
+    --tilt-duration     : 3D settle duration, seconds (default 0.8)
+-->
+
+<!-- HTML -->
+<div class="glow-surface" id="glow-surface">
+  <div class="glow-surface__sheen" id="glow-surface-sheen"></div>
+  <div class="glow-surface__content">
+    <!-- Paste your card content here -->
+  </div>
+</div>
+
+<!-- CSS -->
+<style>
+  .glow-surface {
+    position: relative;
+    z-index: 2;
+    overflow: hidden;
+    background: var(--surface-bg, #111111);
+    border: 1px solid var(--surface-border, rgba(255, 255, 255, 0.08));
+    border-radius: var(--surface-radius, 24px);
+    transform-style: preserve-3d;
+    perspective: 1200px;
+  }
+  .glow-surface__content {
+    position: relative;
+    z-index: 2;
+    padding: 48px;
+  }
+  .glow-surface__sheen {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    width: var(--sheen-width, 35%);
+    z-index: 1;
+    background: linear-gradient(
+      105deg,
+      rgba(0, 0, 0, 0) 0%,
+      var(--sheen-color, rgba(255, 255, 255, 0.18)) 50%,
+      rgba(0, 0, 0, 0) 100%
+    );
+    opacity: 0;
+    pointer-events: none;
+    will-change: transform, opacity;
+    transform: translateX(-120%);
+  }
+</style>
+
+<!-- JS — paste into your main timeline script -->
+<script>
+  // const surface = document.getElementById("glow-surface");
+  // const sheen = document.getElementById("glow-surface-sheen");
+  // const hostRoot = surface.closest("[data-composition-id]");
+  // const styles = getComputedStyle(hostRoot);
+  // const sheenStart = parseFloat(styles.getPropertyValue("--sheen-start")) || 1.0;
+  // const sheenDuration = parseFloat(styles.getPropertyValue("--sheen-duration")) || 1.2;
+  // const tiltStart = parseFloat(styles.getPropertyValue("--tilt-start")) || 0.2;
+  // const tiltDuration = parseFloat(styles.getPropertyValue("--tilt-duration")) || 0.8;
+  // const surfaceWidth = surface.offsetWidth;
+  // const sheenWidth = sheen.offsetWidth;
+  // const travel = surfaceWidth + sheenWidth * 2;
+  //
+  // tl.fromTo(surface,
+  //   { rotateX: 12, rotateY: -12, scale: 0.92 },
+  //   { rotateX: 0, rotateY: 0, scale: 1, duration: tiltDuration, ease: "power3.out" },
+  //   tiltStart
+  // );
+  // tl.fromTo(sheen,
+  //   { x: -travel * 0.55, opacity: 0 },
+  //   { x: travel * 0.55, opacity: 1, duration: sheenDuration, ease: "none" },
+  //   sheenStart
+  // );
+  // tl.to(sheen, { opacity: 0, duration: 0.25, ease: "power1.in" }, sheenStart + sheenDuration - 0.25);
+</script>
