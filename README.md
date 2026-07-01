@@ -162,7 +162,7 @@ Remotion 脚手架需要 `Node.js 18+`。
 ## 安装
 
 ```bash
-npx skills add https://github.com/<your-username>/video-replica-studio
+npx skills add https://github.com/taotao135791-bit/video-replica-studio
 ```
 
 ## 设计边界
