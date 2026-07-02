@@ -77,7 +77,3 @@ reference_documents:
   - "references/motion-vocabulary.md"
   - "references/style-dna.md"
   - "references/presenton-lessons.md"
-interface:
-  display_name: "视频复刻工作室"
-  short_description: "参考视频拆解动效复刻 HyperFrames/Remotion 组件沉淀对齐差分和硬质检"
-  default_prompt: "Use $video-replica-studio to analyze this reference video, recreate the motion as HyperFrames/Remotion components when needed, and verify alignment with evidence."

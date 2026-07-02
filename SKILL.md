@@ -1,4 +1,4 @@
---
+---
 name: video-replica-studio
 description: >
   Analyze, recreate, align, and verify reference-video motion with multimodal
@@ -14,7 +14,7 @@ description: >
 
 # Video Replica Studio / 视频复刻工作室
 
-# Role
+## Role
 
 Make reference-video work evidence-driven, visually intelligent, and reusable.
 Classify the requested fidelity, **see** the reference frames with multimodal
@@ -127,7 +127,7 @@ Summary:
    motion rhythm type (staccato / legato / hybrid), transition vocabulary,
    spatial density, and hero-to-whitespace ratio.
 2. **Encode** primitives as parameterized tokens that map to the shared
-   `Palette`, `EasingType`, and `TransitionType` types in the Remotion / 
+    `Palette`, `EasingType`, and `TransitionType` types in the Remotion /
    HyperFrames shared modules.
 3. **Re-express** by choosing a variation strategy: rhythm acceleration /
    deceleration, temperature shift (warm ↔ cool), spatial density increase /
@@ -143,7 +143,7 @@ CSS `:root` variables.
 
 Collect:
 
-- reference video path or URL
+- reference video path or URL (URLs must be downloaded to a local file before running the CLI)
 - candidate video path, if one exists
 - requested fidelity level
 - target renderer (HyperFrames, Remotion, CSS/SVG, etc.)
@@ -237,7 +237,7 @@ This produces:
 - `psnr.log`, `ssim.log` — per-frame metrics
 - `render-diff/` — side-by-side frames, heatmaps, and contact sheets
 - `component-crop/` — region-level comparisons when `--crops` is provided
-- `alignment-report.md` and `patch-log.md` when `--report` is provided
+- `alignment-report.md` and `patch-log.md` report templates copied into `--out` when `--report` is provided
 
 Read the comparison report first. It classifies mismatches as `hard_cut`,
 `static_segment`, `scene_boundary_mismatch`, `timing_offset`, or
@@ -265,7 +265,7 @@ Rules:
 - Recheck neighboring timestamps so a local fix does not break the sequence.
 - Treat whole-frame PSNR/SSIM as supporting evidence, not the only truth, when
   fonts, browser rasterization, and generated assets differ.
-- For HyperFrames, run `lint`, `validate`, and `inspect` before final render.
+- For HyperFrames, run `lint`, `validate`, and `inspect` (if the HyperFrames CLI is available) before final render.
 - For Remotion, run the equivalent render/screenshot validation used by the
   project.
 - Do not say "aligned" until the report points to the passing evidence.
@@ -291,8 +291,8 @@ in the motion pattern library. Each entry should include:
 ```bash
 python3 cli/replica.py analyze <video> --out <dir> [--preview] [--interval SEC]
 python3 cli/replica.py quick <reference> <candidate> --out <dir>
-python3 cli/replica.py diff <reference> <candidate> --out <dir> [--crops JSON] [--report] [--interval SEC] [--scale EXPRESSION]
-python3 cli/replica.py scaffold {remotion,hyperframes} --out <dir> [--config JSON]
+python3 cli/replica.py diff <reference> <candidate> --out <dir> [--crops PATH] [--report] [--interval SEC] [--scale EXPRESSION]
+python3 cli/replica.py scaffold {remotion,hyperframes} --out <dir> [--config PATH]
 ```
 
 | Subcommand | Purpose | Key outputs |

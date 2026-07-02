@@ -1,40 +1,21 @@
-<!-- pixel-art title: video-replica-studio -->
-```
-╔═════════════════════════════════════════════════════════════════╗
-║                                                                 ║
-║ █  █ ████ ███  ████  ██       ███  ████ ███  █    ████  ███  ██ ║
-║ █  █  ██  █  █ █    █  █      █  █ █    █  █ █     ██  █    █  █ ║
-║ █  █  ██  █  █ ███  █  █      ███  ███  ███  █     ██  █    ████ ║
-║  █ █  ██  █  █ █    █  █      █ █  █    █    █     ██  █    █  █ ║
-║   █  ████ ███  ████  ██       █  █ ████ █    ████ ████  ███ █  █ ║
-║                                                                 ║
-║                    ███ ████ █  █ ███  ████  ██                  ║
-║                  █     ██  █  █ █  █  ██  █  █                  ║
-║                   ██   ██  █  █ █  █  ██  █  █                  ║
-║                     █  ██  █  █ █  █  ██  █  █                  ║
-║                   ███   ██  ████ ███  ████  ██                  ║
-║                                                                 ║
-║                         视频复刻工作室                                 ║
-║                                                                 ║
-╚═════════════════════════════════════════════════════════════════╝
-```
+# 视频复刻工作室 / Video Replica Studio
 
-# Video Replica Studio / 视频复刻工作室
-
-参考视频复刻、拆解、对齐质检和动效组件沉淀，支持多模态视觉理解驱动创作。
+参考视频动效复刻、拆解、对齐质检与组件沉淀，支持多模态视觉理解驱动创作。
 
 不是“凭感觉复刻”，而是先抽帧、用多模态能力**看懂**参考视频的视觉意图，再写时间线、用候选视频做对照验证；如果目标是 HyperFrames / Remotion 重制，会通过多轮对比和返修改代码，把参考视频里的动效拆成可复用组件。对于风格级任务，会提取 Style DNA 并在新内容上重新表达。
 
-## 快速开始
+---
+
+## Quick Start / 快速开始
 
 ```bash
 # 1. 分析参考视频：抽帧 + 场景检测 + 运动剖面
 python3 cli/replica.py analyze reference.mp4 --out analysis/reference
 
-# 2. 粗略对比候选视频
+# 2. 粗略对比候选视频（预览帧 + 1.0s 粗粒度 render diff）
 python3 cli/replica.py quick reference.mp4 candidate.mp4 --out analysis/quick
 
-# 3. 完整对比：哈希、PSNR/SSIM、render diff、差异分类、报告
+# 3. 完整对比：哈希、PSNR/SSIM、render diff、差异分类、报告模板
 python3 cli/replica.py diff reference.mp4 candidate.mp4 --out analysis/diff --report
 
 # 4. 生成可运行的反 PPT 项目脚手架
@@ -42,8 +23,9 @@ python3 cli/replica.py scaffold remotion --out my-replica/
 python3 cli/replica.py scaffold hyperframes --out my-hyperframes/
 ```
 
-依赖：`Python 3.11+`、`Pillow`、`ffmpeg/ffprobe`（优先自动发现 `static_ffmpeg` / `imageio-ffmpeg` 或系统 PATH）。
-Remotion 脚手架需要 `Node.js 18+`。
+> **注意**：CLI 目前只接受本地视频路径。如果是 URL，请先下载到本地再执行以上命令。
+
+---
 
 ## 能做什么
 
@@ -57,33 +39,31 @@ Remotion 脚手架需要 `Node.js 18+`。
 - HyperFrames / Remotion 重制视频的质检
 - “当前仍然没有对齐”这类返修定位
 
-## 核心方法
+---
 
-这是一个质检和拆解 skill，本身不固定某种视觉风格。它关注证据，也关注视觉理解：
+## 核心工作流
 
-- **多模态视觉检查** —— 在每个决策点主动查看 contact sheet、render-diff 热图和 side-by-side 帧对比
-- **视觉意图提取** —— 描述每段动效的 what/why/mood，而不只是技术指标
-- **早期组件识别** —— 在动手前将参考片段匹配到 CameraRig、KineticText 等现有组件
-- 每 `0.5s` 抽帧，失败窗口用 `0.1s` 或指定时间点密采样
-- 秒级行为时间线与运动剖面（activity / static segment / hard cut / mutation）
-- side-by-side contact sheet 与 render diff 热图
-- 局部 crop / overlay / 组件级对齐证据
-- 自动差异分类：`hard_cut`、`static_segment`、`scene_boundary_mismatch`、`timing_offset`、`missing_secondary_motion`
-- 返修日志和相邻时间点回测
-- PSNR / SSIM / SHA-256 等硬指标
-- **Style DNA** —— 提取配色比例、缓动偏好、转场词汇、空间密度，编码为 `Palette` / `EasingType` / `TransitionType` 参数
+1. **确定输入**：参考视频、候选视频（如有）、目标保真度、渲染栈、输出目录。
+2. **分析参考视频**：抽帧、生成 contact sheet、检测场景切换、输出运动剖面。
+3. **提取视觉意图**：阅读 contact sheet，描述每段画面的 what / why / mood。
+4. **早期组件识别**：将视觉意图与运动词汇卡片组匹配，输出 `component-mapping.json`。
+5. **对比候选视频**：生成 side-by-side、render-diff 热图、差异分类报告。
+6. **小步修复并重跑**：一次只改一个可见问题，改完立即重跑 `replica diff`。
+7. **沉淀可复用组件**：把验证过的动效写入组件库，附带证据、限制和组合配方。
 
-每个可复用组件都应该记录：组件描述、适用场景、输入参数、时间线/缓动、技术栈、对齐证据、已知限制、组合配方。
+---
 
-## Fidelity 级别
+## 保真度级别
 
 | 级别 | 适用场景 | 验收证据 |
 | --- | --- | --- |
-| **Pixel-level** | 用户明确要求 pixel-perfect / bit-exact | SHA-256 一致、PSNR `average:inf`、SSIM `All:1.000000` |
-| **Visual-level** | “复刻”“做一个一样的”“对齐这个视频” | 0.5s 抽帧 side-by-side、时间线报告、差异清单、分类报告 |
-| **Style-level** | “这种风格”“参考这个感觉” | Style DNA：配色比例、字体性格、运动节奏、缓动偏好、转场词汇、空间密度，编码为可参数化 token |
+| **像素级** | 用户明确要求 pixel-perfect / bit-exact | SHA-256 一致、PSNR `average:inf`、SSIM `All:1.000000` |
+| **视觉级** | “复刻”“做一个一样的”“对齐这个视频” | 0.5s 抽帧 side-by-side、时间线报告、差异清单、分类报告 |
+| **风格级** | “这种风格”“参考这个感觉” | Style DNA：配色比例、字体性格、运动节奏、缓动偏好、转场词汇、空间密度，编码为可参数化 token |
 
-手写 HyperFrames / Remotion 通常只能达到 Visual-level；Pixel-level 需要源流复用或完全一致的视频流。
+手写 HyperFrames / Remotion 通常只能达到视觉级；像素级需要源流复用或完全一致的视频流。
+
+---
 
 ## 反 PPT 检查清单
 
@@ -95,7 +75,9 @@ Remotion 脚手架需要 `Node.js 18+`。
 4. **丰富缓动** —— 避免线性淡入淡出和默认 ease-in-out，使用 `power3.inOut`、`back.out`、`elastic.out` 或自定义 spring。
 5. **场景重叠生命周期** —— 下一场景应在前一场景结束前开始进入，不要先黑屏再切换。
 
-每种动效模式的详细决策树、组合配方和组件映射见 `references/motion-vocabulary.md`。
+每种动效模式的详细决策树、组合配方和组件映射见 [`references/motion-vocabulary.md`](references/motion-vocabulary.md)。
+
+---
 
 ## CLI 速查
 
@@ -107,7 +89,9 @@ Remotion 脚手架需要 `Node.js 18+`。
 | `scaffold remotion` | 自包含可运行的 Remotion 反 PPT 项目 | `package.json`、`tsconfig.json`、`src/`、`components/`、`shared/` |
 | `scaffold hyperframes` | 可运行的 HyperFrames host composition | `index.html` |
 
-详见 `scripts/README-scripts.md` 与 `SKILL.md`。
+详见 [`scripts/README-scripts.md`](scripts/README-scripts.md) 与 [`SKILL.md`](SKILL.md)。
+
+---
 
 ## 目录结构
 
@@ -116,9 +100,9 @@ Remotion 脚手架需要 `Node.js 18+`。
 ├── README.md
 ├── SKILL.md
 ├── LICENSE
-├── agents/openai.yaml
-├── cli/replica.py
-├── scripts/
+├── agents/openai.yaml          # Agent 配置文件
+├── cli/replica.py              # 统一命令行入口
+├── scripts/                    # 底层分析脚本
 │   ├── extract_frames.py
 │   ├── compare_videos.py
 │   ├── motion_profile.py
@@ -126,14 +110,14 @@ Remotion 脚手架需要 `Node.js 18+`。
 │   ├── component_crop.py
 │   ├── _utils.py
 │   └── README-scripts.md
-├── references/
+├── references/                 # 方法论与参考文档
 │   ├── alignment-workflow.md
 │   ├── motion-vocabulary.md
 │   ├── presenton-lessons.md
 │   ├── replica-levels.md
 │   ├── style-dna.md
 │   └── visual-intent-guide.md
-├── templates/
+├── templates/                  # 可复用组件与脚手架模板
 │   ├── remotion/
 │   │   ├── components/
 │   │   ├── shared/
@@ -144,14 +128,19 @@ Remotion 脚手架需要 `Node.js 18+`。
 │       ├── motion-grammar.md
 │       └── example/
 └── assets/
-    └── showcases/
+    └── showcases/              # 复刻案例展示
 ```
 
-## 安装
+---
 
-```bash
-npx skills add https://github.com/taotao135791-bit/video-replica-studio
-```
+## 依赖
+
+- Python 3.11+
+- Pillow
+- ffmpeg / ffprobe（优先自动发现 `static_ffmpeg` / `imageio-ffmpeg` 或系统 PATH）
+- Remotion 脚手架需要 Node.js 18+
+
+---
 
 ## 设计边界
 
