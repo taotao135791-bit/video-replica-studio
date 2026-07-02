@@ -116,9 +116,11 @@ with purpose, inputs, timing, implementation stack, evidence, and limits.
 - Sub-composition blocks live in `templates/hyperframes/blocks/`.
 - The Remotion → HyperFrames mapping is documented in
   `templates/hyperframes/motion-grammar.md`.
+- SVG animation patterns (MotionPath, DrawSVG, MorphSVG) and GSAP best practices
+  are documented in `references/gsap-svg-patterns.md` — use it for reference
+  motion that involves SVG paths, strokes, shape morphs, or transform-origin
+  subtleties.
 - A runnable host composition is in `templates/hyperframes/example/index.html`.
-- For SVG graphics, prefer GSAP transform / motionPath / drawSVG / morphSVG over
-  CSS animations; see `references/gsap-svg-patterns.md`.
 
 ## Style DNA Extraction
 
@@ -346,3 +348,4 @@ archive `质检/` folder.
 - `scripts/README-scripts.md` — low-level analysis script documentation
 - `templates/remotion/example/README.md` — Remotion example project scripts
 - `templates/hyperframes/motion-grammar.md` — Remotion → HyperFrames mapping
+- `references/gsap-svg-patterns.md` — GSAP SVG animation patterns for HyperFrames (MotionPath, DrawSVG, MorphSVG, transform origins)
