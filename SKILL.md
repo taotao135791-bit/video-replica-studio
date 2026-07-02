@@ -114,6 +114,8 @@ with purpose, inputs, timing, implementation stack, evidence, and limits.
 - The Remotion → HyperFrames mapping is documented in
   `templates/hyperframes/motion-grammar.md`.
 - A runnable host composition is in `templates/hyperframes/example/index.html`.
+- For SVG graphics, prefer GSAP transform / motionPath / drawSVG / morphSVG over
+  CSS animations; see `references/gsap-svg-patterns.md`.
 
 ## Style DNA Extraction
 

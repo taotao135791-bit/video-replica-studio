@@ -69,6 +69,10 @@ component_library:
     components_location: "templates/hyperframes/components/"
     blocks_location: "templates/hyperframes/blocks/"
     motion_grammar: "templates/hyperframes/motion-grammar.md"
+    svg_animation: "references/gsap-svg-patterns.md"
+    notes:
+      - "All HyperFrames time-driven animations must use GSAP timelines."
+      - "For SVG elements, use GSAP transformOrigin/svgOrigin, MotionPath, DrawSVG, and MorphSVG instead of CSS animations."
 
 reference_documents:
   - "references/replica-levels.md"
@@ -77,3 +81,4 @@ reference_documents:
   - "references/motion-vocabulary.md"
   - "references/style-dna.md"
   - "references/presenton-lessons.md"
+  - "references/gsap-svg-patterns.md"
