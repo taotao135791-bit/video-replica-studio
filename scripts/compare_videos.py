@@ -386,7 +386,7 @@ def classify_mismatches(
 
 
 def severity_icon(severity: str) -> str:
-    return {"high": "🔴", "medium": "🟡", "low": "🟢"}.get(severity, "⚪")
+    return {"high": "[HIGH]", "medium": "[MED]", "low": "[LOW]"}.get(severity, "[?]")
 
 
 def write_report(outdir: Path, data: dict) -> Path:

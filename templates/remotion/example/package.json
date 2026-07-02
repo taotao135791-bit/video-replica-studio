@@ -4,7 +4,7 @@
   "private": true,
   "scripts": {
     "start": "remotion studio",
-    "build": "remotion render Root AntiPPTDemo out/video.mp4",
+    "build": "remotion render src/index.ts AntiPPTDemo out/video.mp4",
     "typecheck": "tsc --noEmit"
   },
   "dependencies": {

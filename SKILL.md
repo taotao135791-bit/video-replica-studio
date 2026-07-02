@@ -55,9 +55,12 @@ python3 cli/replica.py quick reference.mp4 candidate.mp4 --out analysis/quick
 # 4. Scaffold a runnable anti-PPT project
 python3 cli/replica.py scaffold remotion --out my-replica/
 python3 cli/replica.py scaffold hyperframes --out my-hyperframes/
+
+# Scaffold with a JSON config (Remotion only)
+python3 cli/replica.py scaffold remotion --out my-replica/ --config style-dna.json
 ```
 
-The CLI can also be run directly after `chmod +x cli/replica.py`.
+The CLI can also be run directly as `./cli/replica.py` (it already has execute permission).
 
 ## Fidelity Levels
 
@@ -65,7 +68,7 @@ Read `references/replica-levels.md` before promising any fidelity level.
 
 | Level | When to use | Acceptance criteria |
 |-------|-------------|---------------------|
-| **Pixel-level** | User asks for exact, bit-exact, frame-identical output, or source stream reuse is possible. | Matching SHA-256 / `cmp`, PSNR `average:inf`, SSIM `All:1.000000`, identical resolution/frame rate/duration/media start. |
+| **Pixel-level** | User asks for exact, bit-exact, frame-identical output, or source stream reuse is possible. | Matching SHA-256 hash (byte-identical files produce identical hashes), PSNR `average:inf`, SSIM `All:1.000000`, identical resolution/frame rate/duration/media start. |
 | **Visual-level** | User says "复刻", "做一个一样的", "对齐这个视频" and exact source files are unavailable. | Side-by-side frames match at the declared interval (default `0.5s`), with only accepted differences documented. Requires reference timeline report, candidate comparison report, side-by-side contact sheets, and a timestamped mismatch list or clear pass statement. |
 | **Style-level** | User wants "这种风格", "参考这个感觉", "做同款风格". | Style principles are present: palette, typography behavior, motion grammar, scene rhythm, motifs, transition vocabulary. Exact timing is optional. |
 
@@ -230,6 +233,10 @@ of "build from scratch".
 
 ```bash
 python3 cli/replica.py diff reference.mp4 candidate.mp4 --out analysis/diff --report
+
+# Compare focused regions (e.g. logo, headline)
+echo '{"logo": [20, 20, 200, 80], "headline": [100, 200, 600, 120]}' > crops.json
+python3 cli/replica.py diff reference.mp4 candidate.mp4 --out analysis/diff --report --crops crops.json
 ```
 
 This produces:

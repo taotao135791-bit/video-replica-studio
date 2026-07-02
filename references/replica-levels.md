@@ -7,7 +7,7 @@ bit-exact, or frame-identical output.
 
 Acceptance evidence:
 
-- matching file hash and `cmp`, when the output is a source-stream copy
+- matching SHA-256 file hash (byte-identical files produce identical hashes), when the output is a source-stream copy
 - PSNR `average:inf`
 - SSIM `All:1.000000`
 - same resolution, frame rate, duration, and media start

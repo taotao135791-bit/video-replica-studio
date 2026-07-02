@@ -29,7 +29,7 @@ Status: `{{PASS|FAIL|PARTIAL}}`
 
 | Timestamp | Type | Severity | Description | Status |
 |----------:|------|----------|-------------|--------|
-| `{{T}}s` | `{{TYPE}}` | 🔴 high / 🟡 medium / 🟢 low | {{DESCRIPTION}} | {{open|fixed|accepted}} |
+| `{{T}}s` | `{{TYPE}}` | [HIGH] high / [MED] medium / [LOW] low | {{DESCRIPTION}} | {{open|fixed|accepted}} |
 
 ## Acceptance Evidence
 
